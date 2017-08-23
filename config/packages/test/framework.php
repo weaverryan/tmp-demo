@@ -1,8 +1,6 @@
 <?php
 
-$container->loadFromExtension('framework', [
-    'test' => true,
-    'session' => [
-        'storage_id' => 'session.storage.mock_file'
-    ],
-]);
+use Symfony\Component\Config\Loader\Config\framework;
+
+framework\test(true);
+framework\session\storage_id('session.storage_mock_file');

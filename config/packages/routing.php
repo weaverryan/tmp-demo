@@ -1,7 +1,6 @@
 <?php
 
-$container->loadFromExtension('framework', [
-    'router' => [
-        'strict_requirements' => null,
-    ]
-]);
+use Symfony\Component\Config\Loader\Config\framework;
+
+framework\router()
+  ->strict_requirements(null);

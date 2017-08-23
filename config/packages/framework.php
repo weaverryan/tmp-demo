@@ -1,20 +1,25 @@
 <?php
-use Symfony\Component\Config\Loader\Config\framework;
 
-framework\secret('%env(SYMFONY_SECRET)%');
+use App\AppConfigurator;
 
-// framework\default_locale('en');
-// framework\csrf_protection(true);
-// framework\http_method_override(true);
-// framework\trusted_hosts(null);
+return function(AppConfigurator $di) {
+    $framework = $di->framework();
 
-// https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
-//framework\session()
-//  ->handler_id('session.handler.native_file')
-//  ->save_path('%kernel.project_dir%/var/sessions/%kernel.environment%');
+    $framework->secret('%env(SYMFONY_SECRET)%');
 
-// framework\esi()
-// framework\fragments();
+    // $framework->default_locale('en');
+    // $framework->csrf_protection(true);
+    // $framework->http_method_override(true);
+    // $framework->trusted_hosts(null);
 
-framework\php_errors()
-  ->log(true);
+    // https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+    // $framework->session()
+    //  ->handler_id('session.handler.native_file')
+    //  ->save_path('%kernel.project_dir%/var/sessions/%kernel.environment%');
+
+    // $framework->esi()
+    // $framework->fragments();
+
+    $framework->php_errors()
+      ->log(true);
+};

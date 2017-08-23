@@ -1,6 +1,11 @@
 <?php
 
-use Symfony\Component\Config\Loader\Config\framework;
+use App\AppConfigurator;
 
-framework\test(true);
-framework\session\storage_id('session.storage_mock_file');
+return function(AppConfigurator $di) {
+    $framework = $di->framework();
+
+    $framework->test(true);
+    $framework->session()
+        ->storage_id('session.storage_mock_file');
+};

@@ -1,6 +1,10 @@
 <?php
 
-use Symfony\Component\Config\Loader\Config\framework;
+use App\AppConfigurator;
 
-framework\router()
-  ->strict_requirements(null);
+return function(AppConfigurator $di) {
+    $framework = $di->framework();
+
+    $framework->router()
+        ->strict_requirements(null);
+};

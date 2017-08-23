@@ -1,5 +1,6 @@
 <?php
 
+use App\AppConfigurator;
 use App\Command\ListUsersCommand;
 use App\Twig\AppExtension;
 use App\EventListener\CommentNotificationSubscriber;
@@ -7,30 +8,31 @@ use App\EventListener\RedirectToPreferredLocaleSubscriber;
 use Twig\Extensions\IntlExtension;
 use App\Utils\Slugger;
 
-di\services()
-    ->defaults()
+return function(AppConfigurator $di) {
+    $di->configureDefaults()
         ->autowired(true)
         ->autoconfigured(true)
-        ->public(false)
-    ->prototype('App\\', '../src/*')
-        ->exclude('../src/{Entity,Repository}')
-    ->prototype('App\\Controller\\', '../src/Controller')
+        ->public(false);
+
+    $di
+        ->load('App\\', '../src/*', '../../src/{Entity,Repository}');
+
+    $di
+        ->load('AppBundle\Controller\\', '../../src/AppBundle/Controller')
         ->public(true)
-        ->tag('controller.service_arguments')
-    ->add(ListUsersCommand::class)
-        ->argument('$locales', '%app_locales%')
+        ->tag('../../src/AppBundle/Controller');
 
-    ->add(AppExtension::class)
-        ->argument('$locales', '%app_locales%')
-
-    ->add(CommentNotificationSubscriber::class)
-        ->argument('$locales', '%app_locales%')
-
-    ->add(RedirectToPreferredLocaleSubscriber::class)
-        ->argument('$locales', '%app_locales%')
-
-    ->add(IntlExtension::class)
-        ->argument('$locales', '%app_locales%')
-
-    ->alias('slugger', \di\ref(Slugger::class))
-;
+    $di->get(ListUsersCommand::class)
+        ->bind('$emailSender', '%email_sender%');
+    ;
+    $di->get(AppExtension::class)
+        ->bind('$locales', '%app_locales%');
+    $di->get(CommentNotificationSubscriber::class)
+        ->bind('$sender', '%app.notifications.email_sender%');
+    $di->get(RedirectToPreferredLocaleSubscriber::class)
+        ->bind('$locales', '%app_locales%')
+        ->bind('$defaultLocale', '%locale%');
+    $di->add(IntlExtension::class);
+    $di->alias('slugger', $di->reference(Slugger::class))
+        ->public(true);
+};

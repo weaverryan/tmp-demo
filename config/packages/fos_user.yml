@@ -1,0 +1,19 @@
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: App\Entity\User
+    service:
+        user_manager: App\Service\UserManager
+        mailer: App\Service\CustomMailer
+    from_email:
+        address: '%mailer_sender_address%'
+        sender_name: '%mailer_sender_name%'
+    registration:
+        confirmation:
+            enabled: false
+        form:
+            type: App\Form\Type\RegistrationFormType
+    resetting:
+        token_ttl: 86400
+    change_password: true
+    profile: true

@@ -1,5 +1,5 @@
 <?php
-
+use Symfony\Component\Config\Loader\Config\framework;
 $container->loadFromExtension('framework', [
     'secret' => '%env(APP_SECRET)%',
     'default_locale' => 'en',

@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Component\DependencyInjection\Alias;
-use Symfony\Component\DependencyInjection\Definition;
 use App\Command\ListUsersCommand;
 use App\Twig\AppExtension;
 use App\EventListener\CommentNotificationSubscriber;
@@ -9,45 +7,30 @@ use App\EventListener\RedirectToPreferredLocaleSubscriber;
 use Twig\Extensions\IntlExtension;
 use App\Utils\Slugger;
 
-$definition = new Definition();
+di\services()
+    ->defaults()
+        ->autowired(true)
+        ->autoconfigured(true)
+        ->public(false)
+    ->prototype('App\\', '../src/*')
+        ->exclude('../src/{Entity,Repository}')
+    ->prototype('App\\Controller\\', '../src/Controller')
+        ->public(true)
+        ->tag('controller.service_arguments')
+    ->add(ListUsersCommand::class)
+        ->argument('$locales', '%app_locales%')
 
-$definition
-    ->setAutowired(true)
-    ->setAutoconfigured(true)
-    ->setPublic(false)
+    ->add(AppExtension::class)
+        ->argument('$locales', '%app_locales%')
+
+    ->add(CommentNotificationSubscriber::class)
+        ->argument('$locales', '%app_locales%')
+
+    ->add(RedirectToPreferredLocaleSubscriber::class)
+        ->argument('$locales', '%app_locales%')
+
+    ->add(IntlExtension::class)
+        ->argument('$locales', '%app_locales%')
+
+    ->alias('slugger', \di\ref(Slugger::class))
 ;
-
-$this->registerClasses(
-    $definition,
-    'App\\',
-    '../src/*',
-    '../src/{Entity,Repository}'
-);
-
-$definition
-    ->setAutowired(true)
-    ->setAutoconfigured(true)
-    ->addTag('controller.service_arguments')
-;
-$this->registerClasses(
-    $definition,
-    'App\\Controller\\',
-    '../src/Controller'
-);
-
-$container->register(ListUsersCommand::class)
-    ->setArgument('$locales', '%app_locales%');
-
-$container->register(AppExtension::class)
-    ->setArgument('$locales', '%app_locales%');
-
-$container->register(CommentNotificationSubscriber::class)
-    ->setArgument('$locales', '%app_locales%');
-
-$container->register(RedirectToPreferredLocaleSubscriber::class)
-    ->setArgument('$locales', '%app_locales%');
-
-$container->register(IntlExtension::class)
-    ->setArgument('$locales', '%app_locales%');
-
-$container->setAlias('slugger', new Alias(Slugger::class));

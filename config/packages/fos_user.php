@@ -1,28 +1,23 @@
 <?php
 
-$container->loadFromExtension('fos_user', [
-    'db_driver' => 'orm',
-    'firewall_name' => 'main',
-    'user_class' => 'App\Entity\User',
-    'service' => [
-        'user_manager' => 'App\Service\UserManager',
-        'mailer' => 'App\Service\CustomMailer',
-    ],
-    'from_email' => [
-        'address' => '%mailer_sender_address%',
-        'sender_name' => '%mailer_sender_name%',
-    ],
-    'registration' => [
-        'confirmation' => [
-            'enabled' => false
-        ],
-        'form' => [
-            'type' => 'App\Form\Type\RegistrationFormType',
-        ],
-    ],
-    'resetting' => [
-        'token_ttl' => 86400,
-    ],
-    'change_password' => true,
-    'profile' => true,
-]);
+use Symfony\Component\Config\Loader\Config\fos_user;
+
+fos_user\db_driver('orm');
+fos_user\firewall_name('main');
+fos_user\user_class('App\\Entity\\User');
+fos_user\service()
+  ->user_manager(UserManager::class)
+  ->mailer(CustomMailer::class);
+fos_user\from_email()
+  ->address('%mailer_sender_address%')
+  ->sender_name('%mailer_sender_name%');
+
+// we go one level deeper here
+fos_user\registration\confirmation()
+  ->enabled(true);
+fos_user\registration\form()
+  ->type(RegistrationFormType::class);
+
+fos_user\resetting\token_ttl(86400);
+fos_user\change_password(true);
+fos_user\profile(true);

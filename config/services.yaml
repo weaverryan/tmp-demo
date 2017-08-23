@@ -27,3 +27,23 @@ services:
         resource: '../src/Controller'
         public: true
         tags: ['controller.service_arguments']
+
+    App\Command\ListUsersCommand:
+        arguments:
+            $emailSender: '%app.notifications.email_sender%'
+
+    App\Twig\AppExtension:
+        $locales: '%app_locales%'
+
+    App\EventListener\CommentNotificationSubscriber:
+        $sender: '%app.notifications.email_sender%'
+
+    App\EventListener\RedirectToPreferredLocaleSubscriber:
+        $locales: '%app_locales%'
+        $defaultLocale: '%locale%'
+
+    Twig\Extensions\IntlExtension: ~
+
+    slugger:
+        alias: App\Utils\Slugger
+        public: true

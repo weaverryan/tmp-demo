@@ -13,13 +13,13 @@ return function(AppConfigurator $di) {
     // $framework->trusted_hosts(null);
 
     // https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
-    // $framework->session()
+    // $framework->session
     //  ->handler_id('session.handler.native_file')
     //  ->save_path('%kernel.project_dir%/var/sessions/%kernel.environment%');
 
     // $framework->esi()
     // $framework->fragments();
 
-    $framework->php_errors()
+    $framework->php_errors
       ->log(true);
 };

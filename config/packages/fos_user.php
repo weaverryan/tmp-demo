@@ -16,12 +16,12 @@ return function(AppConfigurator $di) {
       ->sender_name('%mailer_sender_name%');
 
     // we go one level deeper here
-    $fos_user->registration\confirmation()
+    $fos_user->registration()->confirmation()
       ->enabled(true);
-    $fos_user->registration\form()
+    $fos_user->registration()->form()
       ->type(RegistrationFormType::class);
 
-    $fos_user->resetting\token_ttl(86400);
+    $fos_user->resetting()->token_ttl(86400);
     $fos_user->change_password(true);
     $fos_user->profile(true);
 };
